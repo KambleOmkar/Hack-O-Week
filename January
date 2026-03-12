@@ -1,0 +1,278 @@
+1.Basic FAQ Responder
+
+#include <stdio.h>
+#include <string.h>
+
+int main() {
+
+    char query[200];
+
+    printf("Institute FAQ Bot\n");
+    printf("Type exit to quit\n");
+
+    while(1) {
+
+        printf("\nYou: ");
+        fgets(query, sizeof(query), stdin);
+
+        query[strcspn(query,"\n")] = 0;
+
+        if(strlen(query)==0)
+            continue;
+
+        if(strcmp(query,"exit")==0) {
+            printf("Bot: Goodbye\n");
+            break;
+        }
+
+        if(strstr(query,"timing") || strstr(query,"time"))
+            printf("Bot: College timing is 9 AM to 5 PM\n");
+
+        else if(strstr(query,"fees"))
+            printf("Bot: Annual fees are around 90000 INR\n");
+
+        else if(strstr(query,"contact"))
+            printf("Bot: Contact office at 0712-123456\n");
+
+        else if(strstr(query,"hostel"))
+            printf("Bot: Hostel facility available\n");
+
+        else if(strstr(query,"admission"))
+            printf("Bot: Admissions start in June\n");
+
+        else
+            printf("Bot: Sorry I don't know that\n");
+    }
+
+    return 0;
+}
+
+
+2.Preparing Student Queries
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void preprocess(char *text) {
+
+    for(int i=0;text[i];i++) {
+
+        text[i]=tolower(text[i]);
+
+        if(ispunct(text[i]))
+            text[i]=' ';
+    }
+}
+
+int main() {
+
+    char query[200];
+
+    printf("Query Preprocessing Bot\n");
+
+    while(1) {
+
+        printf("\nEnter Query: ");
+        fgets(query,sizeof(query),stdin);
+
+        query[strcspn(query,"\n")] = 0;
+
+        if(strcmp(query,"exit")==0)
+            break;
+
+        preprocess(query);
+
+        if(strstr(query,"fees"))
+            printf("Bot: Fees are 90000 per year\n");
+
+        else if(strstr(query,"timing"))
+            printf("Bot: College timing is 9 AM to 5 PM\n");
+
+        else if(strstr(query,"hostel"))
+            printf("Bot: Hostel facility available\n");
+
+        else
+            printf("Bot: No matching FAQ\n");
+    }
+
+    return 0;
+}
+
+
+3.Synonym Aware FAQ Bot
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void lowercase(char *s) {
+
+    for(int i=0;s[i];i++)
+        s[i]=tolower(s[i]);
+}
+
+int main() {
+
+    char query[200];
+
+    printf("Synonym FAQ Bot\n");
+
+    while(1) {
+
+        printf("\nYou: ");
+        fgets(query,sizeof(query),stdin);
+
+        query[strcspn(query,"\n")] = 0;
+
+        if(strcmp(query,"exit")==0)
+            break;
+
+        lowercase(query);
+
+        if(strstr(query,"fees") || strstr(query,"tuition") || strstr(query,"payment"))
+            printf("Bot: Tuition fees are 90000 INR yearly\n");
+
+        else if(strstr(query,"hostel") || strstr(query,"accommodation") || strstr(query,"dorm"))
+            printf("Bot: Hostel accommodation available\n");
+
+        else if(strstr(query,"timing") || strstr(query,"schedule"))
+            printf("Bot: Classes run from 9 AM to 5 PM\n");
+
+        else if(strstr(query,"contact") || strstr(query,"phone"))
+            printf("Bot: Call 0712-123456\n");
+
+        else
+            printf("Bot: Could not understand\n");
+    }
+
+    return 0;
+}
+
+4. FAQ Retrieval with TF-IDF
+
+#include <stdio.h>
+#include <string.h>
+
+char *questions[] = {
+    "admission process",
+    "hostel facility",
+    "college timing",
+    "fees structure",
+    "contact information"
+};
+
+char *answers[] = {
+    "Admissions start in June.",
+    "Hostel available for boys and girls.",
+    "College timing is 9 AM to 5 PM.",
+    "Fees are 90000 per year.",
+    "Contact office at 0712-123456."
+};
+
+int score(char *query, char *faq) {
+
+    int s = 0;
+
+    char temp[200];
+    strcpy(temp, query);
+
+    char *token = strtok(temp," ");
+
+    while(token) {
+
+        if(strstr(faq,token))
+            s++;
+
+        token = strtok(NULL," ");
+    }
+
+    return s;
+}
+
+int main() {
+
+    char input[200];
+
+    printf("FAQ Retrieval Bot\n");
+
+    printf("Ask Question: ");
+    fgets(input,sizeof(input),stdin);
+
+    input[strcspn(input,"\n")] = 0;
+
+    int best=-1;
+    int bestScore=0;
+
+    for(int i=0;i<5;i++) {
+
+        int s = score(input,questions[i]);
+
+        if(s>bestScore) {
+
+            bestScore=s;
+            best=i;
+        }
+    }
+
+    if(best!=-1)
+        printf("Answer: %s\n",answers[best]);
+
+    else
+        printf("No relevant FAQ\n");
+
+    return 0;
+}
+
+
+5. Intent Classification for Queries
+
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+
+void lowercase(char *s) {
+
+    for(int i=0;s[i];i++)
+        s[i]=tolower(s[i]);
+}
+
+int main() {
+
+    char query[200];
+
+    printf("Intent Classification Bot\n");
+
+    while(1) {
+
+        printf("\nEnter Query: ");
+        fgets(query,sizeof(query),stdin);
+
+        query[strcspn(query,"\n")] = 0;
+
+        if(strcmp(query,"exit")==0)
+            break;
+
+        lowercase(query);
+
+        if(strstr(query,"admission") || strstr(query,"apply"))
+            printf("Intent: Admissions\n");
+
+        else if(strstr(query,"exam") || strstr(query,"test"))
+            printf("Intent: Exams\n");
+
+        else if(strstr(query,"timetable") || strstr(query,"schedule"))
+            printf("Intent: Timetable\n");
+
+        else if(strstr(query,"hostel") || strstr(query,"room"))
+            printf("Intent: Hostel\n");
+
+        else if(strstr(query,"scholarship"))
+            printf("Intent: Scholarship\n");
+
+        else
+            printf("Intent: Unknown\n");
+    }
+
+    return 0;
+}
